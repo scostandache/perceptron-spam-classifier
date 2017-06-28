@@ -3,7 +3,6 @@ from Perceptron import *
 from numpy import dot
 import cProfile
 import random
-import multiprocessing as mp
 
 
 if __name__ == "__main__":
@@ -16,11 +15,3 @@ if __name__ == "__main__":
     print "test results: ",perceptron.test(),"\n"
     print "validation results: ", perceptron.validate(),"\n"
     perceptron.best_and_worst(15)
-
-
-
-
-
-
-
-
