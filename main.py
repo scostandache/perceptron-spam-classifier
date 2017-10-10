@@ -12,7 +12,7 @@ if __name__ == "__main__":
     validate_set = DataSet("datasets/spam_validation.txt")
 
     perceptron = Perceptron(train_set, test_set, validate_set)
-    perceptron.train(0.9)
+    perceptron.train(0.7)
     print "test results: ",perceptron.test(),"\n"
     print "validation results: ", perceptron.validate(),"\n"
     perceptron.best_and_worst(15)

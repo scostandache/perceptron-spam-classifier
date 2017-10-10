@@ -1,12 +1,7 @@
-from DataSet import *
 from Mail import *
 import random
 import numpy as np
 import math
-from joblib import Parallel, delayed
-from pathos.multiprocessing import ProcessingPool as Pool
-import copy
-
 
 def work(foo):
     return foo.work()
@@ -23,8 +18,8 @@ class Perceptron(object):
         self.TRAINER = train_set
         self.TESTER = test_set
         self.VALIDATOR = validate_set
-        self.WEIGHTS = [random.uniform(-1.0/math.sqrt(self.TRAINER.weights_no),
-                                       1.0/math.sqrt(self.TRAINER.weights_no))
+        self.WEIGHTS = [random.uniform(-3.0/math.sqrt(self.TRAINER.weights_no),
+                                       3.0/math.sqrt(self.TRAINER.weights_no))
                                     for _ in xrange(self.TRAINER.weights_no)]
 
     def train(self, eta):
@@ -53,27 +48,18 @@ class Perceptron(object):
                     self.WEIGHTS[idx] = self.WEIGHTS[idx] + \
                                         learning_rate * (mail.target - mail.output) * mail.feature_vector[idx]
 
-                if mail.target - mail.output <= 0.2:
+                if abs(mail.target - mail.output) <= 0.05:
                     mail.correct_class = True
                     correctly_classified += 1
 
             print correctly_classified
             wrongly_classified = len(self.TRAINER.MAILS) - correctly_classified
 
-            # if learning_rate > 0.01:
-            #     learning_rate -= 0.01
-
+            if learning_rate > 0.03:
+                learning_rate -= 0.01
             print learning_rate
-            if (wrongly_classified < 200):
-                learning_rate = 0.1
-            if (wrongly_classified < 100):
-                learning_rate = 0.05
-            if(wrongly_classified < 50):
-                learning_rate = 0.03
-            if (wrongly_classified < 10):
-                learning_rate = 0.01
 
-            if (wrongly_classified == 0):
+            if (wrongly_classified < 5):
                 perceptron_trained = True
                 correct_instances = correctly_classified
 
@@ -105,7 +91,7 @@ class Perceptron(object):
 
         for mail in self.TESTER.MAILS:
             mail.output = sigmoid(np.dot(self.WEIGHTS, mail.feature_vector))
-            if mail.target == mail.output:
+            if abs(mail.target - mail.output) <= 0.1:
                 correctly_classified += 1
         print correctly_classified
 
@@ -128,7 +114,7 @@ class Perceptron(object):
 
         for mail in self.VALIDATOR.MAILS:
             mail.output = sigmoid(np.dot(self.WEIGHTS, mail.feature_vector))
-            if mail.target == mail.output:
+            if abs(mail.target - mail.output) <= 0.1:
                 correctly_classified += 1
 
         print correctly_classified
