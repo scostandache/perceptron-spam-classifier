@@ -79,7 +79,7 @@ class Perceptron(object):
         sorted_words = sorted(self.TRAINER.word_corresp)
         # create feature vectors for mails
         for mail in self.TESTER.MAILS:
-            # multiplying a bool with an int -> int
+            # bool * int = int
             # faster than int(bool)
             mail.feature_vector = [(word in mail.words) * 1 for word in sorted_words]
         self.weights_no = len(sorted_words)
